@@ -7,6 +7,10 @@ const UserHome = () => {
       <h1>Gerenciamento de usuários</h1>
     </header>
       <hr />
+      <hr />
+    <footer>
+      <span>Desenvolvido por Bruno Ferreira</span>
+    </footer>
     </>
   )
 }
