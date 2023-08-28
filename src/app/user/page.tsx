@@ -7,6 +7,7 @@ const UserHome = () => {
       <h1>Gerenciamento de usuários</h1>
     </header>
       <hr />
+      <input type="text" placeholder='Pesquisar por nome'/>
       <main>
         <form action="">
           <table>
