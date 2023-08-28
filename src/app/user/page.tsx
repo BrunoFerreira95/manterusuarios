@@ -8,6 +8,7 @@ const UserHome = () => {
     </header>
       <hr />
       <input type="text" placeholder='Pesquisar por nome'/>
+      <button> Adicionar Usuário</button>
       <main>
         <form action="">
           <table>
