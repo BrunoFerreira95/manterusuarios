@@ -3,9 +3,11 @@ import React from 'react'
 const UserHome = () => {
   return (
     <>
-    <header>
-      <h1>Gerenciamento de usuários</h1>
-    </header>
+    <div className='flex justify-center min-h-screen max-h-fit'>
+
+      <header>
+        <h1>Gerenciamento de usuários</h1>
+      </header>
       <hr />
       <input type="text" placeholder='Pesquisar por nome'/>
       <button> Adicionar Usuário</button>
@@ -39,9 +41,10 @@ const UserHome = () => {
         </form>
       </main>
       <hr />
-    <footer>
-      <span>Desenvolvido por Bruno Ferreira</span>
-    </footer>
+      <footer>
+        <span>Desenvolvido por Bruno Ferreira</span>
+      </footer>
+    </div>
     </>
   )
 }
