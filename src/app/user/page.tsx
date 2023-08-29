@@ -1,18 +1,12 @@
+import Header from '@/components/Header'
 import React from 'react'
-
-import Logo from '@/assets/logo.png'
-import Image from 'next/image'
 
 const UserHome = () => {
   return (
     <>
     <div className='flex justify-center min-h-screen max-h-fit w-screen'>
       <div className='flex flex-col w-2/4'>
-        <header className='h-20 flex items-center'>
-          <Image className='w-10 h-10 mr-2'src={Logo} alt='simbiose ventures'/>
-          <h1>Gerenciamento de usuários</h1>
-        </header>
-        <hr />
+        <Header/>
         <main>
           <input type="text" placeholder='Pesquisar por nome'/>
           <button> Adicionar Usuário</button>
