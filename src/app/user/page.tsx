@@ -9,6 +9,7 @@ import { createUser, deleteUser, editUser, fetchUsers } from '@/controllers/user
 
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { formatDateToBr } from '@/utils/formatData'
 
 
 type UsersProps ={
@@ -101,7 +102,7 @@ const UserHome = () => {
                 <tr key={user.id}>
                   <th className='border-2 border-black p-2'>{user.nome}</th>
                   <th className='border-2 border-black p-2'>{user.email}</th>
-                  <th className='border-2 border-black p-2'>{user.data_de_nascimento}</th>
+                  <th className='border-2 border-black p-2'>{formatDateToBr(user.data_de_nascimento)}</th>
                   <th className='border-2 border-black p-2'>
                     <button onClick={() => hanldeEditeUser(dialogRef, user, setUser, setFormOption)}>Editar</button>
                     <br/ >
