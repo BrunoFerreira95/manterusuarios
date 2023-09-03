@@ -9,7 +9,7 @@ import { createUser, deleteUser, editUser, fetchUsers } from '@/controllers/user
 
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { formatDateToBr } from '@/utils/formatData'
+import { formatDataBrasileiraParaISO, formatDateToBr } from '@/utils/formatData'
 
 
 type UsersProps ={
@@ -126,10 +126,10 @@ const UserHome = () => {
               <label htmlFor="email">Email:</label>
               <p>{errors.nome?.message}</p>
               <input className='border-2 border-black rounded-lg' type="email"  defaultValue={user?.email} {...register('email')}/>
-              <label htmlFor="data_de_nascimento">Data de nascimento:</label>
               <p>{errors.email?.message}</p>
-              <input className='border-2 border-black rounded-lg' type="date"   defaultValue={user?.data_de_nascimento} {...register('data_de_nascimento')}/>
-              <p>{errors.data_de_nascimento?.message}</p>
+              <label htmlFor="data_de_nascimento">Data de nascimento:</label>
+              <input className='border-2 border-black rounded-lg' type="date"   defaultValue={formatDataBrasileiraParaISO(user?.data_de_nascimento)} {...register('data_de_nascimento')}/>
+                <p>{errors.data_de_nascimento?.message}</p>
               <div className='flex justify-center'>
                 {formOption ? (
                   <button className='p-2 bg-blue-500 w-1/4 rounded-lg mt-5 text-white' type='submit'>Editar</button>
