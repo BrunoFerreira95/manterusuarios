@@ -1,4 +1,6 @@
-export function fetchUsers(setUsers) {
+import { formatDate } from "@/utils/formatData";
+
+export async function fetchUsers(setUsers) {
   return fetch('http://localhost:3004/pessoa')
     .then(response => {
       if (!response.ok) {
@@ -16,7 +18,7 @@ export function fetchUsers(setUsers) {
     });
 }
 
-export function createUser(newUser, setUsers) {
+export async function createUser(newUser, setUsers) {
   return fetch('http://localhost:3004/pessoa', {
     method: 'POST',
     headers: {
@@ -41,7 +43,7 @@ export function createUser(newUser, setUsers) {
     });
 }
 
-export function deleteUser(userId, setUsers) {
+export async function deleteUser(userId, setUsers) {
   return fetch(`http://localhost:3004/pessoa/${userId}`, {
     method: 'DELETE',
   })
@@ -61,3 +63,51 @@ export function deleteUser(userId, setUsers) {
       throw error;
     });
 }
+
+
+export async function editUser(userId, user, updatedUserData, setUsers) {
+  let updatedUserDataFormatted; // Declaração da variável no escopo local
+
+  // Verifique se updatedUserData.data_de_nascimento está definida e não é vazia
+  if (updatedUserData.data_de_nascimento) {
+    // Formate a data para o formato "yyyy-MM-dd"
+    const formattedDate = formatDate(updatedUserData.data_de_nascimento);
+
+    // Crie uma cópia dos dados atualizados com a data formatada
+    updatedUserDataFormatted = { ...updatedUserData, data_de_nascimento: formattedDate };
+  } else {
+    // Se updatedUserData.data_de_nascimento não está definida ou é vazia, mantenha o valor original
+    updatedUserDataFormatted = { ...updatedUserData, data_de_nascimento: user.data_de_nascimento };
+  }
+
+  return fetch(`http://localhost:3004/pessoa/${userId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updatedUserDataFormatted),
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Erro ao editar o usuário');
+      }
+      return response.json();
+    })
+    .then(data => {
+      setUsers(users => {
+        const updatedUsers = users.map(currentUser => {
+          if (currentUser.id === userId) {
+            return { ...currentUser, ...data };
+          }
+          return currentUser;
+        });
+        return updatedUsers;
+      });
+      return data;
+    })
+    .catch(error => {
+      console.error(error);
+      throw error;
+    });
+}
+
