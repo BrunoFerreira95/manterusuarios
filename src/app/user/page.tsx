@@ -33,7 +33,9 @@ const UserHome = () => {
   const [users, setUsers] = useState<UsersProps>([])
   const [user, setUser] = useState<UserProp>()
   const [formOption, setFormOption] = useState(false)
-
+  const [search, setSearch] = useState('')
+  const [filterUsers, setfilterUsers] = useState<UsersProps>([])
+  
   const dialogRef: RefObject<HTMLDialogElement> = useRef(null);
 
   const {
@@ -59,6 +61,10 @@ const UserHome = () => {
   useEffect(() => {
     fetchUsers(setUsers)
   }, [])
+
+  useEffect(() => {
+    filterUsersByName(search, users, setfilterUsers)
+  }, [search])
   return (
     <>
     <div className='flex justify-center min-h-screen max-h-fit w-screen'>
@@ -66,7 +72,7 @@ const UserHome = () => {
         <Header/>
         <main className='flex justify-center items-center flex-col m-5'>
           <div className='flex justify-between w-full '>
-            <input type="text" placeholder='Pesquisar por nome' className='border-2 rounded-lg p-5 '/>
+            <input type="text" onChange={(e) => setSearch(e.target.value)} placeholder='Pesquisar por nome' className='border-2 rounded-lg p-5 '/>
             <button onClick={() => hanldeCreateUser(dialogRef, setUser , setFormOption)} className='cursor-pointer border-2 rounded-lg p-5'> Adicionar Usuário</button>
           </div>
           <table className='border p-5 m-10'>
@@ -80,7 +86,7 @@ const UserHome = () => {
               </tr>
             </thead>
             <tbody>
-              {users ? users.map((user) => (
+              {filterUsers ? filterUsers.map((user) => (
                 <tr key={user.id}>
                   <th>{user.nome}</th>
                   <th>{user.email}</th>
@@ -153,4 +159,18 @@ function hanldeCreateUser(dialogRef: RefObject<HTMLDialogElement>, setUser, setF
   dialogRef.current?.showModal()
 
   setUser('')
+}
+
+// Função para filtrar os usuários pelo nome
+function filterUsersByName(name, users, setfilterUsers) {
+  const filteredUsers = users.filter(user => {
+    // Transforma o nome do usuário e o termo de filtro em letras minúsculas
+    const userNomeLowerCase = user.nome.toLowerCase();
+    const filterNomeLowerCase = name.toLowerCase();
+
+    // Verifica se o nome do usuário contém o termo de filtro
+    return userNomeLowerCase.includes(filterNomeLowerCase);
+  });
+
+  setfilterUsers(filteredUsers);
 }
