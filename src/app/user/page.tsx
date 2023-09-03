@@ -2,6 +2,8 @@
 
 import React, { RefObject, useEffect, useRef, useState } from 'react'
 import { useForm, SubmitHandler } from "react-hook-form"  
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
 
 import { createUser, deleteUser, editUser, fetchUsers } from '@/controllers/user.controllers'
 
@@ -28,6 +30,13 @@ interface DialogRefType {
   closeDialog: () => void;
 }
 
+const schema = yup
+  .object({
+    nome: yup.string().required(),
+    email: yup.string().email().required(),
+    data_de_nascimento: yup.date().required()
+  })
+  .required()
 
 const UserHome = () => {
   const [users, setUsers] = useState<UsersProps>([])
@@ -44,16 +53,18 @@ const UserHome = () => {
     watch,
     formState: { errors },
     reset
-  } = useForm<UserProp>()
+  } = useForm({
+    resolver: yupResolver(schema),
+  }) 
 
-  const onSubmit: SubmitHandler<UserProp> = (data) => {
-    console.log(formOption)
+  const onSubmit: SubmitHandler<schema> = (data) => {
     if(formOption) {
       editUser(user?.id, user, data, setUsers)
+      closeModal(dialogRef, setUser, setFormOption)
     }
     if(!formOption) {
-      console.log('create')
       createUser(data, setUsers)
+      closeModal(dialogRef, setUser, setFormOption)
     }
     
     reset()
@@ -64,7 +75,7 @@ const UserHome = () => {
 
   useEffect(() => {
     filterUsersByName(search, users, setfilterUsers)
-  }, [search])
+  }, [search, users])
   return (
     <>
     <div className='flex justify-center min-h-screen max-h-fit w-screen'>
@@ -78,21 +89,22 @@ const UserHome = () => {
           <table className='border p-5 m-10'>
             <caption className='text-lg'>Usuários</caption>
             <thead>
-              <tr>
-                <th scope="col">Nome</th>
-                <th scope="col">Email</th>
-                <th scope="col">Data de Nascimento</th>
-                <th scope="col">Ações</th>
+              <tr className='border-2 border-black p-2'>
+                <th className='border-2 border-black p-2' scope="col">Nome</th>
+                <th className='border-2 border-black p-2' scope="col">Email</th>
+                <th className='border-2 border-black p-2' scope="col">Data de Nascimento</th>
+                <th className='border-2 border-black p-2' scope="col">Ações</th>
               </tr>
             </thead>
             <tbody>
               {filterUsers ? filterUsers.map((user) => (
                 <tr key={user.id}>
-                  <th>{user.nome}</th>
-                  <th>{user.email}</th>
-                  <th>{user.data_de_nascimento}</th>
-                  <th>
+                  <th className='border-2 border-black p-2'>{user.nome}</th>
+                  <th className='border-2 border-black p-2'>{user.email}</th>
+                  <th className='border-2 border-black p-2'>{user.data_de_nascimento}</th>
+                  <th className='border-2 border-black p-2'>
                     <button onClick={() => hanldeEditeUser(dialogRef, user, setUser, setFormOption)}>Editar</button>
+                    <br/ >
                     <button onClick={() => handleDeleteUser(user.id, setUsers)}>Delete</button>
                   </th>
                 </tr>
@@ -111,15 +123,18 @@ const UserHome = () => {
               <label htmlFor="nome">Nome:</label>
               <input className='border-2 border-black rounded-lg' type="text"  defaultValue={user?.nome} {...register('nome')}/>
               <label htmlFor="email">Email:</label>
+              <p>{errors.nome?.message}</p>
               <input className='border-2 border-black rounded-lg' type="email"  defaultValue={user?.email} {...register('email')}/>
               <label htmlFor="data_de_nascimento">Data de nascimento:</label>
+              <p>{errors.email?.message}</p>
               <input className='border-2 border-black rounded-lg' type="date"   defaultValue={user?.data_de_nascimento} {...register('data_de_nascimento')}/>
+              <p>{errors.data_de_nascimento?.message}</p>
               <div className='flex justify-center'>
                 {formOption ? (
-                  <button onClick={() => closeModal(dialogRef, setUser, setFormOption)} className='p-2 bg-blue-500 w-1/4 rounded-lg mt-5 text-white' type='submit'>Editar</button>
+                  <button className='p-2 bg-blue-500 w-1/4 rounded-lg mt-5 text-white' type='submit'>Editar</button>
                   
                   ) : 
-                  <button onClick={() => closeModal(dialogRef, setUser, setFormOption)} className='p-2 bg-blue-500 w-1/4 rounded-lg mt-5 text-white' type='submit'>Salvar</button>
+                  <button className='p-2 bg-blue-500 w-1/4 rounded-lg mt-5 text-white' type='submit'>Salvar</button>
                 }
 
               </div>
