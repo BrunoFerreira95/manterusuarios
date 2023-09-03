@@ -91,14 +91,12 @@ const UserHome = () => {
                   </th>
                 </tr>
 
-              )): <span>
-                Nenhum usuário encontrado
-                </span>}
+              )): null}
 
             </tbody>
           </table>
         </main>
-        <dialog ref={dialogRef} className='sm:w-2/5 w-1/5 rounded-lg border-2 border-black'>
+        <dialog ref={dialogRef} className='sm:w-1/4 w-1/5 rounded-lg border-2 border-black'>
             <div className='flex justify-end'>
               <button onClick={() => closeModal(dialogRef, setUser, setFormOption)} className='m-5'>Fechar</button>
 
@@ -143,6 +141,7 @@ function handleDeleteUser(userId, setUsers) {
 }
 
 function hanldeEditeUser(dialogRef: RefObject<HTMLDialogElement>, user, setUser, setFormOption) {
+  setUser('')
   setUser(user)
   console.log(user.id)
   setFormOption(true)

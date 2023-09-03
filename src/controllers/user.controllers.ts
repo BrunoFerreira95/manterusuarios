@@ -1,5 +1,12 @@
 import { formatDate } from "@/utils/formatData";
 
+type UserProp = {
+  id: number;
+    nome: string;
+    email: string;
+    data_de_nascimento: string;
+}
+
 export async function fetchUsers(setUsers) {
   return fetch('http://localhost:3004/pessoa')
     .then(response => {
@@ -65,19 +72,19 @@ export async function deleteUser(userId, setUsers) {
 }
 
 
-export async function editUser(userId, user, updatedUserData, setUsers) {
-  let updatedUserDataFormatted; // Declaração da variável no escopo local
-
-  // Verifique se updatedUserData.data_de_nascimento está definida e não é vazia
+export async function editUser(userId, user: UserProp, updatedUserData: UserProp, setUsers) {
+  // Formate a data para o formato "yyyy-MM-dd" se estiver definida em updatedUserData
   if (updatedUserData.data_de_nascimento) {
-    // Formate a data para o formato "yyyy-MM-dd"
-    const formattedDate = formatDate(updatedUserData.data_de_nascimento);
-
-    // Crie uma cópia dos dados atualizados com a data formatada
-    updatedUserDataFormatted = { ...updatedUserData, data_de_nascimento: formattedDate };
+    updatedUserData.data_de_nascimento = formatDate(updatedUserData.data_de_nascimento);
   } else {
-    // Se updatedUserData.data_de_nascimento não está definida ou é vazia, mantenha o valor original
-    updatedUserDataFormatted = { ...updatedUserData, data_de_nascimento: user.data_de_nascimento };
+    updatedUserData.data_de_nascimento = user.data_de_nascimento
+  }
+  if(!updatedUserData.email) {
+    updatedUserData.email = user.email
+  }
+
+  if(!updatedUserData.nome) {
+    updatedUserData.nome = user.nome
   }
 
   return fetch(`http://localhost:3004/pessoa/${userId}`, {
@@ -85,7 +92,7 @@ export async function editUser(userId, user, updatedUserData, setUsers) {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(updatedUserDataFormatted),
+    body: JSON.stringify(updatedUserData),
   })
     .then(response => {
       if (!response.ok) {
@@ -103,11 +110,9 @@ export async function editUser(userId, user, updatedUserData, setUsers) {
         });
         return updatedUsers;
       });
-      return data;
     })
     .catch(error => {
       console.error(error);
       throw error;
     });
 }
-
