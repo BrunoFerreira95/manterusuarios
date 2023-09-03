@@ -33,18 +33,18 @@ const UserHome = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th>Bruno</th>
-                <th>bruno@gmail.com</th>
-                <th>04/04/2004</th>
-                <th>Editar | Remover</th>
-              </tr>
-              <tr>
-                <th>Bruno</th>
-                <th>bruno@gmail.com</th>
-                <th>04/04/2004</th>
-                <th>Editar | Remover</th>
-              </tr>
+              {users ? users.map((user) => (
+                <tr key={user.id}>
+                  <th>{user.nome}</th>
+                  <th>{user.email}</th>
+                  <th>{user.data_de_nascimento}</th>
+                  <th>Editar | Remover</th>
+                </tr>
+
+              )): <span>
+                Nenhum usuário encontrado
+                </span>}
+
             </tbody>
           </table>
         </main>
