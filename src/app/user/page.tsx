@@ -1,8 +1,17 @@
+'use client'
+
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
-import React from 'react'
+import { fetchUsers } from '@/controllers/user.controllers'
+import React, { useEffect, useState } from 'react'
 
 const UserHome = () => {
+  const [users, setUsers] = useState([])
+
+
+  useEffect(() => {
+    fetchUsers(setUsers)
+  }, [])
   return (
     <>
     <div className='flex justify-center min-h-screen max-h-fit w-screen'>
