@@ -3,7 +3,7 @@
 import React, { RefObject, useEffect, useRef, useState } from 'react'
 import { useForm, SubmitHandler } from "react-hook-form"  
 
-import { fetchUsers } from '@/controllers/user.controllers'
+import { createUser, fetchUsers } from '@/controllers/user.controllers'
 
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -40,7 +40,7 @@ const UserHome = () => {
   } = useForm<UsersProps>()
 
   const onSubmit: SubmitHandler<UsersProps> = (data) => {
-    console.log(data)
+    createUser(data, setUsers)
   }
   useEffect(() => {
     fetchUsers(setUsers)
@@ -81,7 +81,7 @@ const UserHome = () => {
             </tbody>
           </table>
         </main>
-        <dialog ref={dialogRef} className='w-1/5 rounded-lg border-2 border-black'>
+        <dialog ref={dialogRef} className='sm:w-2/5 w-1/5 rounded-lg border-2 border-black'>
             <div className='flex justify-end'>
               <button onClick={() => closeModal(dialogRef)} className='m-5'>Fechar</button>
 
