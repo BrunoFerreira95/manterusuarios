@@ -3,7 +3,7 @@
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import { fetchUsers } from '@/controllers/user.controllers'
-import React, { useEffect, useState } from 'react'
+import React, { RefObject, useEffect, useRef, useState } from 'react'
 
 type UsersProps ={
     id: number;
@@ -12,9 +12,16 @@ type UsersProps ={
     data_de_nascimento: string;
 }[]
 
+interface DialogRefType {
+  openDialog: () => void;
+  closeDialog: () => void;
+}
+
+
 const UserHome = () => {
   const [users, setUsers] = useState<UsersProps>([])
 
+  const dialogRef: RefObject<HTMLDialogElement> = useRef(null);
 
   useEffect(() => {
     fetchUsers(setUsers)
@@ -27,7 +34,7 @@ const UserHome = () => {
         <main className='flex justify-center items-center flex-col m-5'>
           <div className='flex justify-between w-full '>
             <input type="text" placeholder='Pesquisar por nome' className='border-2 rounded-lg p-5 '/>
-            <button className='cursor-pointer border-2 rounded-lg p-5'> Adicionar Usuário</button>
+            <button onClick={() => showModal(dialogRef)} className='cursor-pointer border-2 rounded-lg p-5'> Adicionar Usuário</button>
           </div>
           <table className='border p-5 m-10'>
             <caption className='text-lg'>Usuários</caption>
@@ -55,6 +62,20 @@ const UserHome = () => {
             </tbody>
           </table>
         </main>
+        <dialog ref={dialogRef} className='w-1/5 rounded-lg border-2 border-black'>
+            <div className='flex justify-end'>
+              <button onClick={() => closeModal(dialogRef)} className='m-5'>Fechar</button>
+
+            </div>
+            <form action="" className='flex flex-col p-5'>
+              <label htmlFor="nome">Nome:</label>
+              <input className='border-2 border-black rounded-lg' type="text" required/>
+              <label htmlFor="email">Email:</label>
+              <input className='border-2 border-black rounded-lg' type="email" required/>
+              <label htmlFor="data_de_nascimento">Data de nascimento:</label>
+              <input className='border-2 border-black rounded-lg' type="data" required/>
+            </form>
+        </dialog>
         <Footer/>
       </div>
     </div>
@@ -63,3 +84,11 @@ const UserHome = () => {
 }
 
 export default UserHome
+
+function showModal(dialogRef: RefObject<HTMLDialogElement>) {
+  dialogRef.current?.showModal()
+}
+
+function closeModal(dialogRef: RefObject<HTMLDialogElement>) {
+  dialogRef.current?.close()
+}
