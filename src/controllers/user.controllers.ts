@@ -40,3 +40,24 @@ export function createUser(newUser, setUsers) {
       throw error;
     });
 }
+
+export function deleteUser(userId, setUsers) {
+  return fetch(`http://localhost:3004/pessoa/${userId}`, {
+    method: 'DELETE',
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Erro ao excluir o usuário');
+      }
+      return userId; // Retorna o ID do usuário excluído
+    })
+    .then(deletedUserId => {
+      // Remove o usuário da lista usando setUsers
+      setUsers(users => users.filter(user => user.id !== deletedUserId));
+      return deletedUserId; // Retorna o ID do usuário excluído
+    })
+    .catch(error => {
+      console.error(error);
+      throw error;
+    });
+}

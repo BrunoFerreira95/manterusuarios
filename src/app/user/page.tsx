@@ -3,7 +3,7 @@
 import React, { RefObject, useEffect, useRef, useState } from 'react'
 import { useForm, SubmitHandler } from "react-hook-form"  
 
-import { createUser, fetchUsers } from '@/controllers/user.controllers'
+import { createUser, deleteUser, fetchUsers } from '@/controllers/user.controllers'
 
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -14,7 +14,9 @@ type UsersProps ={
     nome: string;
     email: string;
     data_de_nascimento: string;
-}[] | {
+}[]
+
+type UserProp = {
   id: number;
     nome: string;
     email: string;
@@ -37,9 +39,9 @@ const UserHome = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<UsersProps>()
+  } = useForm<UserProp>()
 
-  const onSubmit: SubmitHandler<UsersProps> = (data) => {
+  const onSubmit: SubmitHandler<UserProp> = (data) => {
     createUser(data, setUsers)
   }
   useEffect(() => {
@@ -71,7 +73,10 @@ const UserHome = () => {
                   <th>{user.nome}</th>
                   <th>{user.email}</th>
                   <th>{user.data_de_nascimento}</th>
-                  <th>Editar | Remover</th>
+                  <th>
+                    <button onClick={() => handleDeleteUser(user.id, setUsers)}>Editar</button>
+                    <button onClick={() => handleDeleteUser(user.id, setUsers)}>Delete</button>
+                  </th>
                 </tr>
 
               )): <span>
@@ -94,7 +99,7 @@ const UserHome = () => {
               <label htmlFor="data_de_nascimento">Data de nascimento:</label>
               <input className='border-2 border-black rounded-lg' type="date" required {...register('data_de_nascimento')}/>
               <div className='flex justify-center'>
-                <button className='p-2 bg-blue-500 w-1/4 rounded-lg mt-5 text-white'>Salvar</button>
+                <button onClick={() => closeModal(dialogRef)} className='p-2 bg-blue-500 w-1/4 rounded-lg mt-5 text-white'>Salvar</button>
 
               </div>
             </form>
@@ -114,4 +119,8 @@ function showModal(dialogRef: RefObject<HTMLDialogElement>) {
 
 function closeModal(dialogRef: RefObject<HTMLDialogElement>) {
   dialogRef.current?.close()
+}
+
+function handleDeleteUser(userId, setUsers) {
+  deleteUser(userId, setUsers)
 }
