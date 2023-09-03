@@ -5,8 +5,15 @@ import Header from '@/components/Header'
 import { fetchUsers } from '@/controllers/user.controllers'
 import React, { useEffect, useState } from 'react'
 
+type UsersProps ={
+    id: number;
+    nome: string;
+    email: string;
+    data_de_nascimento: string;
+}[]
+
 const UserHome = () => {
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState<UsersProps>([])
 
 
   useEffect(() => {
