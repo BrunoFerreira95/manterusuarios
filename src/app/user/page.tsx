@@ -1,16 +1,25 @@
 'use client'
 
-import Footer from '@/components/Footer'
-import Header from '@/components/Header'
-import { fetchUsers } from '@/controllers/user.controllers'
 import React, { RefObject, useEffect, useRef, useState } from 'react'
+import { useForm, SubmitHandler } from "react-hook-form"  
+
+import { fetchUsers } from '@/controllers/user.controllers'
+
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+
 
 type UsersProps ={
     id: number;
     nome: string;
     email: string;
     data_de_nascimento: string;
-}[]
+}[] | {
+  id: number;
+    nome: string;
+    email: string;
+    data_de_nascimento: string;
+}
 
 interface DialogRefType {
   openDialog: () => void;
@@ -23,6 +32,16 @@ const UserHome = () => {
 
   const dialogRef: RefObject<HTMLDialogElement> = useRef(null);
 
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<UsersProps>()
+
+  const onSubmit: SubmitHandler<UsersProps> = (data) => {
+    console.log(data)
+  }
   useEffect(() => {
     fetchUsers(setUsers)
   }, [])
@@ -67,13 +86,17 @@ const UserHome = () => {
               <button onClick={() => closeModal(dialogRef)} className='m-5'>Fechar</button>
 
             </div>
-            <form action="" className='flex flex-col p-5'>
+            <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col p-5'>
               <label htmlFor="nome">Nome:</label>
-              <input className='border-2 border-black rounded-lg' type="text" required/>
+              <input className='border-2 border-black rounded-lg' type="text" required {...register('nome')}/>
               <label htmlFor="email">Email:</label>
-              <input className='border-2 border-black rounded-lg' type="email" required/>
+              <input className='border-2 border-black rounded-lg' type="email" required {...register('email')}/>
               <label htmlFor="data_de_nascimento">Data de nascimento:</label>
-              <input className='border-2 border-black rounded-lg' type="data" required/>
+              <input className='border-2 border-black rounded-lg' type="date" required {...register('data_de_nascimento')}/>
+              <div className='flex justify-center'>
+                <button className='p-2 bg-blue-500 w-1/4 rounded-lg mt-5 text-white'>Salvar</button>
+
+              </div>
             </form>
         </dialog>
         <Footer/>
